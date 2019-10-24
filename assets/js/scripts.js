@@ -1,7 +1,5 @@
 $(document).ready(function() {
 
-	desconectar();
-
 	$('.select2').select2({
 
 	  placeholder: 'Selecione',
@@ -35,6 +33,10 @@ $(document).ready(function() {
 		carregaCadastroUsuario();
 	})
 	
+	$("#sair").click(function() {
+		desconectar();
+	})
+
 	$("#enviaLogin").click(function() {
 		console.log('true');
 		autenticaUsuario( $("#formLogin").serialize() );
@@ -87,9 +89,11 @@ function exibeMenuAdmin() {
 	$("#formLogin").css('display', 'none');
 }
 
-function desconectar() {
+function desconectar() {	
 	$("#admin-dropdown").css('display', 'none');
 	$("#formLogin").css('display', 'block');
+	location.href = 'home.php';
+	// ZERAR OS COOKIES
 }
 
 function editaRegra(form) {
