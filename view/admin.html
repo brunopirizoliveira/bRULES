@@ -1,0 +1,35 @@
+<div class="container" id="listagemUsuarios">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Login</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- START BLOCK : list_usuarios -->
+            <tr>
+            <th scope="row">{cdusuario}</th>
+            <td>{nome}</td>
+            <td>{login}</td>
+            </tr>
+            <!-- END BLOCK : list_usuarios -->
+        </tbody>
+    </table>
+</div>
+
+<div class="container" id="cadastroUsuario">
+	
+	<form class="form-group" name="formUsuario" id="formUsuario">
+		<input type="hidden" name="idUsuario">
+		Nome: <input type="text" class="form-control" id="nmUsuario">
+		<br>
+		Login: <input type="text" class="form-control" id="loginUsuario">
+		<br>
+		Senha: <input type="password" class="form-control" id="senhaUsuario">
+		<br>
+		<button id="enviaFormUsuario" type="button" class="btn btn-primary btn-dark">Salvar</button>
+	</form>
+
+</div>
