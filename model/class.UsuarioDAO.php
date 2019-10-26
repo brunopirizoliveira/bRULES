@@ -77,9 +77,11 @@ Class UsuarioDAO {
 					  SENHA     = '".$senha."'
 				  WHERE CDUSUARIO = ".$idUsuario;
 
-		$result = mysqli_query($conn, $query);
-
-		return $result;
+		if(mysqli_query($conn, $query)) {
+			return true;
+		} else {
+			return false;
+		}
 
 	}
 
@@ -90,10 +92,26 @@ Class UsuarioDAO {
 		$query = "INSERT INTO USUARIO (LOGIN, NMUSUARIO, SENHA) 
   			      VALUES('".$login."', '".$nome."', '".$senha."')";
 
-		$result = mysqli_query($conn, $query);
-
-		return $result;
+		if(mysqli_query($conn, $query)) {
+			return true;
+		} else {
+			return false;
+		}
 
 	}
+
+	public function removeUsuario($cdUsuario) {
+
+		$conn = $this->conn;
+		
+		$query = "DELETE FROM USUARIO WHERE CDUSUARIO = ".$cdUsuario;
+		
+		if(mysqli_query($conn, $query)) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}	
 
 }

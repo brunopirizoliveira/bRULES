@@ -41,6 +41,10 @@ $(document).ready(function() {
 		carregaFormUsuario();
 	})
 
+	$("#listarRegras").click(function() {
+		location.href = 'home.php';
+	})
+
 	$("#enviaFormUsuario").click(function() {
 		
 		if($("#nmUsuario").val() == "") 
@@ -93,7 +97,7 @@ function autenticaUsuario(form) {
 			}				
     	},
     	error: function(xhr, status, error) {
-    		console.log('error');
+    		alert('Usuário não encontrado');
     	},
     	complete: function() {
     		console.log('complete')
@@ -107,9 +111,16 @@ function carregaCadastroUsuario() {
 	location.href = 'admin.php';
 }
 
-function carregaFormUsuario() {
+function carregaFormUsuario(idUsuario) {
 	$("#listagemUsuarios").hide();
 	$("#cadastroUsuario").show();
+	if(idUsuario) {
+		$("#idUsuario").val(idUsuario);
+	}
+}
+
+function carregraRegra(cdregra) {
+	location.href="editRegra.php?cdregra="+cdregra;
 }
 
 function exibeMenuAdmin() {
@@ -150,6 +161,28 @@ function editaRegra(form) {
 
 }
 
+function removeRegra(cdregra) {
+
+    $.ajax({
+        
+        type: "POST",
+        url: "../controller/ajax/removeRegra.php",
+        data: {'cdregra': cdregra},
+        dataType: 'json',
+        success: function(data) {
+        	location.reload();
+    	},
+    	error: function(xhr, status, error) {
+    		console.log('error');
+    	},
+    	complete: function() {
+    		console.log('complete')
+    	}
+    
+    });
+
+}
+
 
 function editaUsuario(form) {
 
@@ -163,6 +196,28 @@ function editaUsuario(form) {
         	
         	location.href = 'admin.php';
         	
+    	},
+    	error: function(xhr, status, error) {
+    		console.log('error');
+    	},
+    	complete: function() {
+    		console.log('complete')
+    	}
+    
+    });
+
+}
+
+function removeUsuario(cdusuario) {
+
+    $.ajax({
+        
+        type: "POST",
+        url: "../controller/ajax/removeUsuario.php",
+        data: {'cdusuario': cdusuario},
+        dataType: 'json',
+        success: function(data) {
+        	location.reload();
     	},
     	error: function(xhr, status, error) {
     		console.log('error');

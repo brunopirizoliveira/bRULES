@@ -11,7 +11,7 @@ Class RegraDAO {
 		$this->conn = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
 	}
 
-	public function listaRegra() {
+	public function listaRegra($cdRegra=null) {
 
 		$conn = $this->conn;
 
@@ -28,6 +28,9 @@ Class RegraDAO {
 			      on CATEGORIA.CDSISTEMA = SISTEMA.CDSISTEMA      
 			inner join USUARIO
 			      on REGRANEGOCIO.CDUSUARIO = USUARIO.CDUSUARIO";
+
+		if($cdRegra)
+			$query.= ' WHERE REGRANEGOCIO.CDREGRA = '.$cdRegra;
 
 		$result = mysqli_query($conn, $query);
 
@@ -53,6 +56,20 @@ Class RegraDAO {
 		
 		$query = "INSERT INTO REGRANEGOCIO (CDCATEGORIA, CDUSUARIO, DESCRICAO) 
 				  VALUES ($cdCategoria, $cdUsuario, '$regra') ";
+		
+		if(mysqli_query($conn, $query)) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	public function removeRegra($cdRegra) {
+
+		$conn = $this->conn;
+		
+		$query = "DELETE FROM REGRANEGOCIO WHERE CDREGRA = ".$cdRegra;
 		
 		if(mysqli_query($conn, $query)) {
 			return true;

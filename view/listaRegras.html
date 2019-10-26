@@ -1,5 +1,5 @@
 <div class="container">
-  <table class="table">
+  <table class="table table-striped">
     <thead class="thead-dark">
       <tr>
         <th scope="col">#</th>
@@ -7,16 +7,28 @@
         <th scope="col">Categoria</th>
         <th scope="col">Usuário Abert.</th>
         <th scope="col">Regra</th>
+        <th scope="col">Editar</th>
+        <th scope="col">Excluir</th>
       </tr>
     </thead>
     <tbody>
     	<!-- START BLOCK : list_regra -->
       <tr>
         <th scope="row">{cdregra}</th>
-        <td>{sistema}</td>
-        <td>{categoria}</td>
-        <td>{usuario}</td>
-        <td>{regra}</td>
+        <td scope="row">{sistema}</td>
+        <td scope="row">{categoria}</td>
+        <td scope="row">{usuario}</td>
+        <td scope="row">{regra}</td>
+        <td scope="row">
+          <button type="button" onclick="carregraRegra({cdregra})">
+            <i class="fas fa-edit"></i>
+          </button>
+        </td>
+        <td scope="row">
+          <button type="button" onclick="removeRegra({cdregra})">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
       </tr>
       <!-- END BLOCK : list_regra -->
     </tbody>

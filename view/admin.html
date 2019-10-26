@@ -8,20 +8,32 @@
 
     <div class="row">
         <div class="col-12">
-            <table class="table">
+            <table class="table table-striped">
                 <thead class="thead-dark">
                     <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Login</th>
+                        <th scope="col">#</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Login</th>
+                        <th scope="col">Editar</th>
+                        <th scope="col">Excluir</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- START BLOCK : list_usuarios -->
                     <tr>
-                    <th scope="row">{cdusuario}</th>
-                    <td>{nome}</td>
-                    <td>{login}</td>
+                        <td scope="row">{cdusuario}</th>
+                        <td>{nome}</td>
+                        <td>{login}</td>
+                        <td scope="row">
+                            <button type="button" onclick="carregaFormUsuario({cdusuario})">
+                                <i class="fas fa-user-edit"></i>
+                            </button>
+                        </td>
+                        <td scope="row">
+                            <button type="button" onclick="removeUsuario({cdusuario})">
+                                <i class="fas fa-user-minus"></i>
+                            </button>
+                        </td>
                     </tr>
                     <!-- END BLOCK : list_usuarios -->
                 </tbody>
@@ -34,7 +46,7 @@
 <div class="container" id="cadastroUsuario">
 	
 	<form class="form-group" name="formUsuario" id="formUsuario">
-		<input type="hidden" name="idUsuario">
+		<input type="hidden" name="idUsuario" id="idUsuario">
 		Nome: <input type="text" class="form-control" id="nmUsuario" name="nmUsuario">
 		<br>
 		Login: <input type="text" class="form-control" id="loginUsuario" name="loginUsuario">
