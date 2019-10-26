@@ -44,7 +44,7 @@ Class UsuarioDAO {
 		$row = mysqli_fetch_assoc($result);
 
         if(!$row) {
-            return 0;
+            return null;
         } else{
             $usuario = new Usuario;
             $usuario->setCdusuario($row['CDUSUARIO']);

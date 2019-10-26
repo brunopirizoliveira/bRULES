@@ -1,5 +1,9 @@
 $(document).ready(function() {
 
+	if(getCookie('CDUSUARIO') != -1) {
+		exibeMenuAdmin()	
+	}
+
 	$('.select2').select2({
 
 	  placeholder: 'Selecione',
@@ -33,6 +37,10 @@ $(document).ready(function() {
 		carregaCadastroUsuario();
 	})
 	
+	$("#carregaFormUsuario").click(function() {
+		carregaFormUsuario();
+	})
+
 	$("#sair").click(function() {
 		desconectar();
 	})
@@ -92,8 +100,10 @@ function exibeMenuAdmin() {
 function desconectar() {	
 	$("#admin-dropdown").css('display', 'none');
 	$("#formLogin").css('display', 'block');
+	
+	// ZERA OS COOKIES
+	zeraCookies();
 	location.href = 'home.php';
-	// ZERAR OS COOKIES
 }
 
 function editaRegra(form) {
@@ -153,3 +163,23 @@ function setCookie(cname, cvalue, exdays) {
 	  }
 	}
   }
+
+  function listCookies() {
+    var theCookies = document.cookie.split(';');
+    var aString = '';
+    for (var i = 1 ; i <= theCookies.length; i++) {
+        aString += i + ' ' + theCookies[i-1] + "\n";
+    }
+    return aString;
+}
+
+
+function zeraCookies() {
+	eraseCookie('CDUSUARIO');
+	eraseCookie('NMUSUARIO');
+	eraseCookie('LOGIN');
+}
+
+function eraseCookie(name) {
+	setCookie(name,-1);
+}

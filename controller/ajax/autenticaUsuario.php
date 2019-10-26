@@ -9,9 +9,7 @@ $usuario->setSenha($_REQUEST['senha']);
 $usuarioDAO = new UsuarioDAO;
 $retornoUsuario = $usuarioDAO->verificaExistencia($usuario);
 
-if($retornoUsuario == 0) {
-    echo json_encode($retornoUsuario);
-} else {
+if($retornoUsuario) {
     
     setcookie('CDUSUARIO', $retornoUsuario->getCdusuario(), time() + (86400 * 30), "/"); // 86400 = 1 day
     setcookie('LOGIN',     $retornoUsuario->getLogin(), time() + (86400 * 30), "/"); // 86400 = 1 day
