@@ -57,7 +57,43 @@ Class UsuarioDAO {
 		    
 	}
 
+	public function salvaUsuario($login, $nome, $senha, $idUsuario=null) {
 
+		$conn = $this->conn;
+
+		if($idUsuario)
+			UsuarioDAO::editaUsuario($login, $nome, $senha, $idUsuario);
+		else
+			UsuarioDAO::insereUsuario($login, $nome, $senha);
+	}
 	
+	public function editaUsuario($login, $nome, $senha, $idUsuario) {
+
+		$conn = $this->conn;
+
+		$query = "UPDATE USUARIO 
+				  SET LOGIN     = '".$login."',
+					  NMUSUARIO = '".$nome."',
+					  SENHA     = '".$senha."'
+				  WHERE CDUSUARIO = ".$idUsuario;
+
+		$result = mysqli_query($conn, $query);
+
+		return $result;
+
+	}
+
+	public function insereUsuario($login, $nome, $senha) {
+
+		$conn = $this->conn;
+
+		$query = "INSERT INTO USUARIO (LOGIN, NMUSUARIO, SENHA) 
+  			      VALUES('".$login."', '".$nome."', '".$senha."')";
+
+		$result = mysqli_query($conn, $query);
+
+		return $result;
+
+	}
 
 }

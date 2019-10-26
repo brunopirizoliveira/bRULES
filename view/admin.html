@@ -1,6 +1,6 @@
 <div class="container" id="listagemUsuarios">
 
-    <div class="row">
+    <div class="row mb-2">
         <div class="col-12">
             <a class="btn btn-primary btn-dark" href="#" id="carregaFormUsuario" role="button">Novo</a>
         </div>
@@ -35,11 +35,11 @@
 	
 	<form class="form-group" name="formUsuario" id="formUsuario">
 		<input type="hidden" name="idUsuario">
-		Nome: <input type="text" class="form-control" id="nmUsuario">
+		Nome: <input type="text" class="form-control" id="nmUsuario" name="nmUsuario">
 		<br>
-		Login: <input type="text" class="form-control" id="loginUsuario">
+		Login: <input type="text" class="form-control" id="loginUsuario" name="loginUsuario">
 		<br>
-		Senha: <input type="password" class="form-control" id="senhaUsuario">
+		Senha: <input type="password" class="form-control" id="senhaUsuario" name="senhaUsuario">
 		<br>
 		<button id="enviaFormUsuario" type="button" class="btn btn-primary btn-dark">Salvar</button>
 	</form>

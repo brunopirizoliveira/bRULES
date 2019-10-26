@@ -41,6 +41,21 @@ $(document).ready(function() {
 		carregaFormUsuario();
 	})
 
+	$("#enviaFormUsuario").click(function() {
+		
+		if($("#nmUsuario").val() == "") 
+			alert('É obrigatório o preenchimento do Nome')
+		
+		else if($("#loginUsuario").val() == "") 
+			alert('É obrigatório o preenchimento do Login')
+		
+		else if($("#senhaUsuario").val() == "") 
+			alert('É obrigatório o preenchimento da Senha')
+		else
+			editaUsuario( $("#formUsuario").serialize() );
+		
+	})
+
 	$("#sair").click(function() {
 		desconectar();
 	})
@@ -92,6 +107,11 @@ function carregaCadastroUsuario() {
 	location.href = 'admin.php';
 }
 
+function carregaFormUsuario() {
+	$("#listagemUsuarios").hide();
+	$("#cadastroUsuario").show();
+}
+
 function exibeMenuAdmin() {
 	$("#admin-dropdown").css('display', 'block');
 	$("#formLogin").css('display', 'none');
@@ -117,6 +137,31 @@ function editaRegra(form) {
         success: function(data) {
         	
         	location.href = 'home.php';
+        	
+    	},
+    	error: function(xhr, status, error) {
+    		console.log('error');
+    	},
+    	complete: function() {
+    		console.log('complete')
+    	}
+    
+    });
+
+}
+
+
+function editaUsuario(form) {
+
+    $.ajax({
+        
+        type: "POST",
+        url: "../controller/ajax/executeUsuario.php",
+        data: form,
+        dataType: 'json',
+        success: function(data) {
+        	
+        	location.href = 'admin.php';
         	
     	},
     	error: function(xhr, status, error) {
