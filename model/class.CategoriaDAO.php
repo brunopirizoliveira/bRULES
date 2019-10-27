@@ -45,4 +45,27 @@ Class CategoriaDAO {
 		
 	}
 
+	public function listCategorias() {
+
+		$conn = $this->conn;
+
+		$query = "SELECT CDCATEGORIA, DESCRICAO, CDSISTEMA FROM CATEGORIA ";
+
+		$result = mysqli_query($conn, $query);
+
+		$vet = array();
+		
+		while( $row = mysqli_fetch_assoc($result) ) {			
+			$categoria = new stdClass();
+			
+			$categoria->index = $row['CDCATEGORIA'];
+			// $categoria->cdsistema 	= $row['CDSISTEMA'];
+			$categoria->value = $row['DESCRICAO'];
+			
+			array_push($vet, $categoria);
+			
+		}
+		return $vet;		
+	}
+
 }

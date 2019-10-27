@@ -4,7 +4,7 @@ $(document).ready(function() {
 		exibeMenuAdmin()	
 	}
 
-	$('.select2').select2({
+	$('#sistema').select2({
 
 	  placeholder: 'Selecione',
 	  tags: true,
@@ -28,6 +28,44 @@ $(document).ready(function() {
 	  }
 
 	});
+
+	$('#categoria').select2({
+
+	  placeholder: 'Selecione',
+	  tags: true,
+	  createTag: function (params) {
+	    return {
+	      id: params.term,
+	      text: params.term,
+	      newOption: true
+	    }
+	  },
+	  templateResult: function (data) {
+	    var $result = $("<span></span>");
+
+	    $result.text(data.text);
+
+	    if (data.newOption) {
+	      $result.append(" <em>(new)</em>");
+	    }
+
+	    return $result;
+	  },
+	  ajax: {
+	  	url: '../controller/ajax/carregaCategoria.php',
+	  	type: 'post',
+	  	dataType: 'json',
+	  	processResults: function (data) {	  	
+	  		
+	      	// Transforms the top-level key of the response object from 'items' to 'results'
+	    	return {
+	        	results: data
+	    	};
+	  	}	
+	  }
+
+	});
+
 
 	$("#enviaFormRegra").click(function() {
 		editaRegra( $("#formRegra").serialize() );
