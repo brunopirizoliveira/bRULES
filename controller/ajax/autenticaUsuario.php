@@ -14,6 +14,7 @@ if($retornoUsuario) {
     setcookie('CDUSUARIO', $retornoUsuario->getCdusuario(), time() + (86400 * 30), "/"); // 86400 = 1 day
     setcookie('LOGIN',     $retornoUsuario->getLogin(), time() + (86400 * 30), "/"); // 86400 = 1 day
     setcookie('NMUSUARIO', $retornoUsuario->getSenha(), time() + (86400 * 30), "/"); // 86400 = 1 day
+    setcookie('MASTER',    $retornoUsuario->getMaster(), time() + (86400 * 30), "/"); // 86400 = 1 day
 
     echo json_encode(1);
 }

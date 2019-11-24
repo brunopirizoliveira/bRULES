@@ -15,7 +15,7 @@ Class UsuarioDAO {
 
 		$conn = $this->conn;
 
-		$query = "SELECT CDUSUARIO, NMUSUARIO, LOGIN FROM USUARIO ";
+		$query = "SELECT CDUSUARIO, NMUSUARIO, LOGIN, MASTER FROM USUARIO ";
 		
 		if($cdusuario) 
 			$query.= " WHERE CDUSUARIO = ".$cdusuario;
@@ -30,6 +30,7 @@ Class UsuarioDAO {
 			$usuario->cdUsuario = $row['CDUSUARIO'];
 			$usuario->nmUsuario = $row['NMUSUARIO'];
 			$usuario->login 	= $row['LOGIN'];
+			$usuario->master 	= $row['MASTER'];
 			
 			$vet[$i] = $usuario;
 			$i++;
@@ -55,31 +56,38 @@ Class UsuarioDAO {
             $usuario->setNmusuario($row['NMUSUARIO']);
             $usuario->setLogin($row['LOGIN']);
             $usuario->setSenha($row['SENHA']);
+            $usuario->setMaster($row['MASTER']);
 
             return $usuario;
         }
 		    
 	}
 
-	public function salvaUsuario($login, $nome, $senha, $idUsuario=false) {
+	public function salvaUsuario($login, $nome, $senha, $master, $idUsuario=false) {
 
 		$conn = $this->conn;
 
 		if($idUsuario)
-			UsuarioDAO::editaUsuario($login, $nome, $senha, $idUsuario);
+			UsuarioDAO::editaUsuario($login, $nome, $senha, $master, $idUsuario);
 		else
-			UsuarioDAO::insereUsuario($login, $nome, $senha);
+			UsuarioDAO::insereUsuario($login, $nome, $senha, $master);
 	}
 	
-	public function editaUsuario($login, $nome, $senha, $idUsuario) {
+	public function editaUsuario($login, $nome, $senha, $master, $idUsuario) {
 
 		$conn = $this->conn;
 
+
+
 		$query = "UPDATE USUARIO 
 				  SET LOGIN     = '".$login."',
-					  NMUSUARIO = '".$nome."',
-					  SENHA     = '".$senha."'
-				  WHERE CDUSUARIO = ".$idUsuario;
+					  NMUSUARIO = '".$nome."',					  
+					  MASTER    = '".$master."'";
+
+				if($senha != "********")
+					$query.= ", SENHA = '".$senha."' ";
+
+				$query.= "WHERE CDUSUARIO = ".$idUsuario;
 
 		if(mysqli_query($conn, $query)) {
 			return true;
@@ -89,12 +97,12 @@ Class UsuarioDAO {
 
 	}
 
-	public function insereUsuario($login, $nome, $senha) {
+	public function insereUsuario($login, $nome, $senha, $master) {
 
 		$conn = $this->conn;
 
-		$query = "INSERT INTO USUARIO (LOGIN, NMUSUARIO, SENHA) 
-  			      VALUES('".$login."', '".$nome."', '".$senha."')";
+		$query = "INSERT INTO USUARIO (LOGIN, NMUSUARIO, SENHA, MASTER) 
+  			      VALUES('".$login."', '".$nome."', '".$senha."', '".$master."')";
 
 		if(mysqli_query($conn, $query)) {
 			return true;

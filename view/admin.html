@@ -1,15 +1,15 @@
-<div class="container" id="listagemUsuarios">
+<div class="container-fluid" id="listagemUsuarios">
 
     <div class="row mb-2">
         <div class="col-12">
-            <a class="btn btn-primary btn-dark" href="#" id="carregaFormUsuario" role="button">Novo</a>
+            <a class="btn btn-light border" href="#" id="carregaFormUsuario" role="button">Novo</a>
         </div>
     </div>
 
     <div class="row">
         <div class="col-12">
-            <table class="table table-striped">
-                <thead class="thead-dark">
+            <table class="table table-bordered table-striped">
+                <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Nome</th>
@@ -53,7 +53,10 @@
 		<br>
 		Senha: <input type="password" class="form-control" id="senhaUsuario" name="senhaUsuario">
 		<br>
-		<button id="enviaFormUsuario" type="button" class="btn btn-primary btn-dark">Salvar</button>
+        Administrador: <input type="radio" name="userMaster" id="userMasterY" value="Y" > Sim 
+                       <input type="radio" name="userMaster" id="userMasterN" value="N" > Não
+        <br><br>
+		<button id="enviaFormUsuario" type="button" class="btn btn-light border">Salvar</button>
 	</form>
 
 </div>

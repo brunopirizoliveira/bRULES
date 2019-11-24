@@ -6,6 +6,7 @@ Class Usuario {
 	private $nmusuario;
 	private $login;
 	private $senha;
+	private $master;
 
 	
 	public function getCdusuario(){
@@ -39,5 +40,13 @@ Class Usuario {
 	public function setSenha($senha){
 		$this->senha = $senha;
 	}	
+
+	public function getMaster() {
+		return $this->master;
+	}
+
+	public function setMaster($master) {
+		$this->master = $master;
+	}
 
 }

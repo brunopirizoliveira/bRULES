@@ -4,6 +4,10 @@ $(document).ready(function() {
 		exibeMenuAdmin()	
 	}
 
+	if(getCookie('MASTER') == 'Y') {
+		exibeMenuMaster();
+	}
+
 
 	$('#sistema').select2({
 
@@ -172,7 +176,17 @@ $(document).ready(function() {
 		
 		var regra     = $("#regra").val();
 		// editaRegra( $("#formRegra").serialize() );
-		editaRegra(regra, sistema, categoria, idregra);
+
+		if(regra == "") 
+			alert('É obrigatório o preenchimento da Regra')
+		
+		else if(sistema == "") 
+			alert('É obrigatório o preenchimento do Sistema')
+		
+		else if(categoria == "") 
+			alert('É obrigatório o preenchimento da Categoria')
+		else
+			editaRegra(regra, sistema, categoria, idregra);
 	})
 
 	$("#cadastrarUsuarios").click(function() {
@@ -192,6 +206,8 @@ $(document).ready(function() {
 			if(confirm("Deseja alterar a senha deste usuário?") == true) {
 				$("#senhaUsuario").val("");
 				$("#senhaUsuario").focus();
+			} else {
+				$("#nmUsuario").focus();
 			}			
 		}
 	})
@@ -243,12 +259,15 @@ function autenticaUsuario(form) {
 			if(data == 1) {
 				alert('Usuário ' + getCookie("LOGIN") + ' conectado');
 				exibeMenuAdmin();
+				if(getCookie('MASTER') == 'Y') {
+					exibeMenuMaster();
+				}
 			} else{
-				alert('Usuário não encontrado');
+				alert('Usuário não encontrado e/ou senha não confere');
 			}				
     	},
     	error: function(xhr, status, error) {
-    		alert('Usuário não encontrado');
+    		alert('Usuário não encontrado  e/ou senha não confere');
     	},
     	complete: function() {
     		console.log('complete')
@@ -277,6 +296,13 @@ function carregaFormUsuario(idUsuario) {
 	        success: function(data) {
 	        	$("#nmUsuario").val(data[0].nmUsuario);
 	        	$("#loginUsuario").val(data[0].login);
+	        	
+	        	if(data[0].master == 'Y') {
+	        		$("#userMasterY").prop('checked', true)
+	        	} else {
+	        		$("#userMasterN").prop('checked', true)
+	        	}
+
 	        	$("#senhaUsuario").val("********");
 	        }
 		})
@@ -292,6 +318,10 @@ function exibeMenuAdmin() {
 	$("#formLogin").css('display', 'none');
 }
 
+function exibeMenuMaster() {
+	$("#cadastrarUsuarios").css('display', 'block');
+}
+
 function desconectar() {	
 	$("#admin-dropdown").css('display', 'none');
 	$("#formLogin").css('display', 'block');
@@ -302,7 +332,7 @@ function desconectar() {
 }
 
 function editaRegra(regra, sistema, categoria, idregra) {
-console.log(idregra);
+
 	if(getCookie('CDUSUARIO') == -1) {
 		alert('Você precisa estar logado para cadastrar/alterar uma regra de negócio!');
 		location.href = 'home.php';
@@ -463,6 +493,7 @@ function zeraCookies() {
 	eraseCookie('CDUSUARIO');
 	eraseCookie('NMUSUARIO');
 	eraseCookie('LOGIN');
+	eraseCookie('MASTER');
 }
 
 function eraseCookie(name) {

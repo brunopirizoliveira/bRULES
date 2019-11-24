@@ -17,6 +17,7 @@ i {
 
 #box-search {
   border-radius: .3rem;
+  background-color: #e3f2fd;
 }
 
 footer {
@@ -60,5 +61,8 @@ footer {
 }
 
 #cadastroUsuario {
+  display: none;
+}
+#cadastrarUsuarios {
   display: none;
 }
