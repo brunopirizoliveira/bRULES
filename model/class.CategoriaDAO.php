@@ -14,7 +14,10 @@ Class CategoriaDAO {
 
 		$conn = $this->conn;
 		
-		$query = "SELECT COUNT(*) NUM, CDCATEGORIA FROM CATEGORIA WHERE DESCRICAO = '$categoria' ";
+		$query = "SELECT COUNT(*) NUM, CDCATEGORIA 
+				  FROM CATEGORIA 
+				  WHERE DESCRICAO = '$categoria' 
+				  AND CDSISTEMA = ".$cdSistema;
 
 		$result = mysqli_query($conn, $query);
 

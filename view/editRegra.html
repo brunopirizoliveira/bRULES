@@ -3,12 +3,12 @@
 	<!-- START BLOCK : list_regra -->
 
 	<form class="form-group" name="formRegra" id="formRegra">
-		<input type="hidden" name="idRegra" value="{cdregra}">
+		<input type="hidden" name="idRegra" id="idRegra" value="{cdregra}">
 		Sistema: <select name="sistema" id="sistema" class="form-control select2"></select>
 		<br>
 		Categoria: <select name="categoria" id="categoria" class="form-control select2"></select>
 		<br>
-		Regra: <textarea name="regra" maxlength="250" class="form-control">{regra}</textarea>
+		Regra: <textarea name="regra" id="regra" maxlength="250" class="form-control">{regra}</textarea>
 		<br>
 		<button id="enviaFormRegra" type="button" class="btn btn-primary btn-dark">Salvar</button>
 	</form>

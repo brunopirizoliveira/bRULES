@@ -11,14 +11,16 @@ Class RegraDAO {
 		$this->conn = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
 	}
 
-	public function listaRegra($cdRegra=null) {
+	public function listaRegra($cdRegra=null, $busca=null) {
 
 		$conn = $this->conn;
 
 		$query = "
 			SELECT REGRANEGOCIO.CDREGRA, 
-			       REGRANEGOCIO.DESCRICAO AS REGRA,        
+			       REGRANEGOCIO.DESCRICAO AS REGRA,   
+			       CATEGORIA.CDCATEGORIA,     
 			       CATEGORIA.DESCRICAO AS CATEGORIA,       
+			       SISTEMA.CDSISTEMA,
 			       SISTEMA.DESCRICAO AS SISTEMA,       
 			       USUARIO.NMUSUARIO AS USUARIO
 			FROM REGRANEGOCIO
@@ -29,8 +31,15 @@ Class RegraDAO {
 			inner join USUARIO
 			      on REGRANEGOCIO.CDUSUARIO = USUARIO.CDUSUARIO";
 
-		if($cdRegra)
-			$query.= ' WHERE REGRANEGOCIO.CDREGRA = '.$cdRegra;
+		if($cdRegra){
+			$query.= " WHERE REGRANEGOCIO.CDREGRA = ".$cdRegra;
+		}
+		else if($busca){
+			$busca = strtoupper($busca);
+			$query.= " WHERE UPPER(REGRANEGOCIO.DESCRICAO) LIKE '%".$busca."%' 
+					   OR    UPPER(CATEGORIA.DESCRICAO) LIKE '%".$busca."%' 
+					   OR    UPPER(SISTEMA.DESCRICAO) LIKE '%".$busca."%' ";
+		}
 
 		$result = mysqli_query($conn, $query);
 
@@ -39,6 +48,8 @@ Class RegraDAO {
 		while( $row = mysqli_fetch_assoc($result) ) {			
 			$regra = new stdClass();
 			$regra->cdRegra 	= $row['CDREGRA'];
+			$regra->cdsistema   = $row['CDSISTEMA'];
+			$regra->cdcategoria = $row['CDCATEGORIA'];
 			$regra->categoria 	= $row['CATEGORIA'];
 			$regra->sistema 	= $row['SISTEMA'];
 			$regra->usuario 	= $row['USUARIO'];
@@ -56,13 +67,28 @@ Class RegraDAO {
 		
 		$query = "INSERT INTO REGRANEGOCIO (CDCATEGORIA, CDUSUARIO, DESCRICAO) 
 				  VALUES ($cdCategoria, $cdUsuario, '$regra') ";
-		
+
 		if(mysqli_query($conn, $query)) {
 			return true;
 		} else {
 			return false;
 		}
 
+	}
+
+	public function editaRegra($cdCategoria, $cdUsuario, $regra, $idRegra) {
+		
+		$conn = $this->conn;
+		
+		$query = "UPDATE REGRANEGOCIO SET CDCATEGORIA = $cdCategoria,
+										  DESCRICAO = '$regra'
+									  WHERE CDREGRA = ".$idRegra;
+		
+		if(mysqli_query($conn, $query)) {
+			return true;
+		} else {
+			return false;
+		}		
 	}
 
 	public function removeRegra($cdRegra) {

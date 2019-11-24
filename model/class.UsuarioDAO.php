@@ -11,11 +11,15 @@ Class UsuarioDAO {
 		$this->conn = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
     }
     
-	public function listaUsuarios() {
+	public function listaUsuarios($cdusuario=false) {
 
 		$conn = $this->conn;
 
 		$query = "SELECT CDUSUARIO, NMUSUARIO, LOGIN FROM USUARIO ";
+		
+		if($cdusuario) 
+			$query.= " WHERE CDUSUARIO = ".$cdusuario;
+		
 
 		$result = mysqli_query($conn, $query);
 
@@ -57,7 +61,7 @@ Class UsuarioDAO {
 		    
 	}
 
-	public function salvaUsuario($login, $nome, $senha, $idUsuario=null) {
+	public function salvaUsuario($login, $nome, $senha, $idUsuario=false) {
 
 		$conn = $this->conn;
 

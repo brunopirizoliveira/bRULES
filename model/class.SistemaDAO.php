@@ -45,4 +45,26 @@ Class SistemaDAO {
 
 	}
 
+	public function listSistemas() {
+
+		$conn = $this->conn;
+
+		$query = "SELECT CDSISTEMA, DESCRICAO FROM SISTEMA ";
+
+		$result = mysqli_query($conn, $query);
+
+		$vet = array();
+		
+		while( $row = mysqli_fetch_assoc($result) ) {			
+			$sistema = new stdClass();
+			
+			$sistema->index = $row['CDSISTEMA'];
+			$sistema->value = $row['DESCRICAO'];
+			
+			array_push($vet, $sistema);
+			
+		}
+		return $vet;		
+	}	
+
 }

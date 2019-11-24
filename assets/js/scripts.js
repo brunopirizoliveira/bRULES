@@ -4,6 +4,7 @@ $(document).ready(function() {
 		exibeMenuAdmin()	
 	}
 
+
 	$('#sistema').select2({
 
 	  placeholder: 'Selecione',
@@ -21,7 +22,7 @@ $(document).ready(function() {
 	    $result.text(data.text);
 
 	    if (data.newOption) {
-	      $result.append(" <em>(new)</em>");
+	      $result.append(" <em>(Pressione Enter para salvar)</em>");
 	    }
 
 	    return $result;
@@ -46,29 +47,132 @@ $(document).ready(function() {
 	    $result.text(data.text);
 
 	    if (data.newOption) {
-	      $result.append(" <em>(new)</em>");
+	      $result.append(" <em>(Pressione Enter para salvar)</em>");
 	    }
 
 	    return $result;
-	  },
-	  ajax: {
-	  	url: '../controller/ajax/carregaCategoria.php',
-	  	type: 'post',
-	  	dataType: 'json',
-	  	processResults: function (data) {	  	
-	  		
-	      	// Transforms the top-level key of the response object from 'items' to 'results'
-	    	return {
-	        	results: data
-	    	};
-	  	}	
 	  }
 
 	});
 
 
+	// Verifica página
+    var url_atual = window.location.href;
+    if(url_atual.indexOf('editRegra.php') != -1) {
+    	if(getCookie('CDUSUARIO') == -1) {
+    		alert('Você precisa estar logado para cadastrar uma regra de negócio!');
+    		location.href = 'home.php';
+    	} else {
+
+    		var idregra = $("#idRegra").val();
+    		$.ajax({
+    			type: 'GET',
+    			data: {idregra: idregra},
+    			url: '../controller/ajax/carregaRegra.php',
+    		}).then(function (data) {
+    			data = JSON.parse(data);
+
+    			var cdsistema   = data[0].cdsistema;
+    			var cdcategoria = data[0].cdcategoria;
+
+				var sistema = $("#sistema");
+				$.ajax({
+					type: 'GET',
+					url: '../controller/ajax/carregaSistema.php',
+				}).then(function (data) {
+					data = JSON.parse(data);
+
+					$(data).each(function(index, value) {
+
+						if(value.index == cdsistema) 
+							isSelected = true;
+						else
+							isSelected = false;
+
+						var option = new Option(value.value, value.index, false, isSelected);
+						sistema.append(option).trigger('change');
+
+						sistema.trigger({
+							type: 'select2:select',
+							params: {
+								data: data
+							}
+						})
+					});
+				})
+
+				var categoria = $("#categoria");
+				$.ajax({
+					type: 'GET',
+					url: '../controller/ajax/carregaCategoria.php',
+				}).then(function (data) {
+					data = JSON.parse(data);				
+					
+					$(data).each(function(index, value) {
+
+						if(value.index == cdcategoria) 
+							isSelected = true;
+						else
+							isSelected = false;	
+
+						var option = new Option(value.value, value.index, true, isSelected);
+						categoria.append(option).trigger('change');
+
+						categoria.trigger({
+							type: 'select2:select',
+							params: {
+								data: data
+							}
+						})
+					});
+				})
+
+    		})
+
+    	}
+    }	
+
+
+	$("#form-search").submit(function() {
+    	
+    	return false;
+	});
+
+	$("#procura-master").keypress('click', function(e) {
+		if(e.which == 13) {
+			var busca = $("#procura-master").val();
+			if( busca != "" ) {
+				buscaRegras(busca);
+			}
+		}
+	});
+
+	$("#btn-procura-master").click(function() {
+		var busca = $("#procura-master").val();
+		if( busca != "" ) {
+			buscaRegras(busca);
+		}
+	})
+
 	$("#enviaFormRegra").click(function() {
-		editaRegra( $("#formRegra").serialize() );
+		var idregra      = $("#idRegra").val();
+		var auxSistema   = $("#sistema option:selected").attr('data-select2-tag');
+		var auxCategoria = $("#categoria option:selected").attr('data-select2-tag');
+
+		if(auxSistema)
+			var sistema = $("#sistema option:selected").val()
+		else 
+			var sistema = $("#sistema option:selected").text();
+		
+		if(auxCategoria)
+			var categoria = $("#categoria option:selected").val()
+		else
+			var categoria = $("#categoria option:selected").text()
+
+		
+		var regra     = $("#regra").val();
+		// editaRegra( $("#formRegra").serialize() );
+		editaRegra(regra, sistema, categoria, idregra);
 	})
 
 	$("#cadastrarUsuarios").click(function() {
@@ -81,6 +185,15 @@ $(document).ready(function() {
 
 	$("#listarRegras").click(function() {
 		location.href = 'home.php';
+	})
+
+	$("#senhaUsuario").on("focusin", function() {
+		if($("#senhaUsuario").val() == "********") {
+			if(confirm("Deseja alterar a senha deste usuário?") == true) {
+				$("#senhaUsuario").val("");
+				$("#senhaUsuario").focus();
+			}			
+		}
 	})
 
 	$("#enviaFormUsuario").click(function() {
@@ -154,6 +267,19 @@ function carregaFormUsuario(idUsuario) {
 	$("#cadastroUsuario").show();
 	if(idUsuario) {
 		$("#idUsuario").val(idUsuario);
+		$.ajax({
+	        type: "GET",
+	        url: "../controller/ajax/getUsuario.php",
+	        data: {
+	        	cdUsuario: idUsuario
+	        },
+	        dataType: 'json',
+	        success: function(data) {
+	        	$("#nmUsuario").val(data[0].nmUsuario);
+	        	$("#loginUsuario").val(data[0].login);
+	        	$("#senhaUsuario").val("********");
+	        }
+		})
 	}
 }
 
@@ -175,49 +301,65 @@ function desconectar() {
 	location.href = 'home.php';
 }
 
-function editaRegra(form) {
+function editaRegra(regra, sistema, categoria, idregra) {
+console.log(idregra);
+	if(getCookie('CDUSUARIO') == -1) {
+		alert('Você precisa estar logado para cadastrar/alterar uma regra de negócio!');
+		location.href = 'home.php';
+	} else {
 
-    $.ajax({
-        
-        type: "POST",
-        url: "../controller/ajax/executeRegra.php",
-        data: form,
-        dataType: 'json',
-        success: function(data) {
-        	
-        	location.href = 'home.php';
-        	
-    	},
-    	error: function(xhr, status, error) {
-    		console.log('error');
-    	},
-    	complete: function() {
-    		console.log('complete')
-    	}
-    
-    });
+	    $.ajax({
+	        
+	        type: "POST",
+	        url: "../controller/ajax/executeRegra.php",
+	        data: {
+	        	regra: regra,
+	        	sistema: sistema,
+	        	categoria: categoria,
+	        	idregra: idregra
+	        },
+	        dataType: 'json',
+	        success: function(data) {
+	        	
+	        	location.href = 'home.php';
+	        	
+	    	},
+	    	error: function(xhr, status, error) {
+	    		console.log('error');
+	    	},
+	    	complete: function() {
+	    		console.log('complete')
+	    	}
+	    
+	    });
+	}
 
 }
 
 function removeRegra(cdregra) {
 
-    $.ajax({
-        
-        type: "POST",
-        url: "../controller/ajax/removeRegra.php",
-        data: {'cdregra': cdregra},
-        dataType: 'json',
-        success: function(data) {
-        	location.reload();
-    	},
-    	error: function(xhr, status, error) {
-    		console.log('error');
-    	},
-    	complete: function() {
-    		console.log('complete')
-    	}
-    
-    });
+	if(getCookie('CDUSUARIO') == -1) {
+		alert('Você precisa estar logado para excluir uma regra de negócio!');
+		location.href = 'home.php';
+	} else {
+	    $.ajax({
+	        
+	        type: "POST",
+	        url: "../controller/ajax/removeRegra.php",
+	        data: {'cdregra': cdregra},
+	        dataType: 'json',
+	        success: function(data) {
+	        	location.reload();
+	    	},
+	    	error: function(xhr, status, error) {
+	    		console.log('error');
+	    	},
+	    	complete: function() {
+	    		console.log('complete')
+	    	}
+	    
+	    });
+	}
 
 }
 
@@ -266,6 +408,11 @@ function removeUsuario(cdusuario) {
     
     });
 
+}
+
+function buscaRegras(busca) {	
+	location.href = "home.php?busca="+busca;
+	
 }
 
 function setCookie(cname, cvalue, exdays) {
